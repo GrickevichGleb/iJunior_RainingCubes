@@ -7,7 +7,7 @@ using UnityEngine.Pool;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] private GameObject _colorCubePref;
+    [SerializeField] private ColorCube _colorCubePref;
     [Space] 
     [SerializeField] private int _poolCapacity = 10;
     [SerializeField] private int _poolMaxSize = 100;
@@ -21,15 +21,17 @@ public class Spawner : MonoBehaviour
     private float _extentX;
     private float _extentZ;
 
-    private ObjectPool<GameObject> _pool;
+    private bool _isSpawning = true;
+
+    private ObjectPool<ColorCube> _pool;
     
     private void Awake()
     {
-        _pool = new ObjectPool<GameObject>(
+        _pool = new ObjectPool<ColorCube>(
             createFunc: () => Instantiate(_colorCubePref),
-            actionOnGet: (obj) => ActionOnGet(obj),
-            actionOnRelease: (obj) => obj.SetActive(false),
-            actionOnDestroy: (obj) => Destroy(obj),
+            actionOnGet: (cube) => ActionOnGet(cube),
+            actionOnRelease: (cube) => cube.gameObject.SetActive(false),
+            actionOnDestroy: (cube) => Destroy(cube.gameObject),
             collectionCheck: true,
             defaultCapacity: _poolCapacity,
             maxSize: _poolMaxSize);
@@ -41,25 +43,15 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating(nameof(SpawnCube), 0f, _spawnInterval);
+        StartCoroutine(SpawnCubes(_spawnInterval));
     }
-
-    private void SpawnCube()
+    
+    private void ActionOnGet(ColorCube cube)
     {
-        _pool.Get();
-    }
-
-    private void ActionOnGet(GameObject obj)
-    {
-        obj.transform.position = GetSpawnPoint();
-
-        if (obj.TryGetComponent(out ColorCube cube))
-        {
-            cube.Reset();
-            cube.RequestRelease += OnRequestRelease;
-        }
-            
-        obj.SetActive(true);
+        cube.Reset();
+        cube.transform.position = GetSpawnPoint();
+        cube.RequestRelease += OnRequestRelease;
+        cube.gameObject.SetActive(true);
     }
     
     private void SetSpawnArea()
@@ -84,11 +76,21 @@ public class Spawner : MonoBehaviour
         return new Vector3(x, _colliderCenter.y, z);
     }
 
-    private void OnRequestRelease(GameObject obj)
+    private void OnRequestRelease(ColorCube cube)
     {
-        if (obj.TryGetComponent(out ColorCube cube))
-            cube.RequestRelease -= OnRequestRelease;
+        cube.RequestRelease -= OnRequestRelease;
+        _pool.Release(cube);
+    }
+
+    private IEnumerator SpawnCubes(float interval)
+    {
+        var delaySeconds = new WaitForSeconds(interval);
         
-        _pool.Release(obj);
+        while (_isSpawning)
+        {
+            yield return delaySeconds;
+            
+            _pool.Get();
+        }
     }
 }

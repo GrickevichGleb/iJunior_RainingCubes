@@ -3,33 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(MeshRenderer))]
 public class ColorCube : MonoBehaviour
 {
-    private const string PlatformTag = "Platform";
-    
     [SerializeField] private int _lifespanMin = 2;
     [SerializeField] private int _lifespanMax = 5;
 
     private MeshRenderer _meshRenderer;
+    private Rigidbody _rigidbody;
     
     private bool _hasHit = false;
     private Color _colorInit;
-    public event Action<GameObject> RequestRelease;
+    public event Action<ColorCube> RequestRelease;
     
     private void Awake()
     {
-        if (gameObject.TryGetComponent(out _meshRenderer))
-        {
-            _colorInit = _meshRenderer.material.color;
-        }
+        _rigidbody = gameObject.GetComponent<Rigidbody>();
+        _meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        
+        _colorInit = _meshRenderer.material.color;
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag(PlatformTag) == false)
-            return;
-
         if (_hasHit == true) 
+            return;
+        
+        if (!other.gameObject.TryGetComponent(out Ground _))
             return;
         
         _hasHit = true;
@@ -40,19 +41,14 @@ public class ColorCube : MonoBehaviour
 
     public void Reset()
     {
-        if (gameObject.TryGetComponent(out Rigidbody rb))
-            rb.velocity = Vector3.zero;
-        
-        if(_meshRenderer != null)
-            _meshRenderer.material.color = _colorInit;
-        
+        _rigidbody.velocity = Vector3.zero;
+        _meshRenderer.material.color = _colorInit;
         _hasHit = false;
     }
 
     private void SetRandomColor()
     {
-        if (_meshRenderer != null)
-            _meshRenderer.material.color = UtilsRandom.GetRandomColor();
+        _meshRenderer.material.color = UtilsRandom.GetRandomColor();
     }
 
     private void SetRandomLifespan()
@@ -66,6 +62,6 @@ public class ColorCube : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         
-        RequestRelease?.Invoke(gameObject);
+        RequestRelease?.Invoke(this);
     }
 }

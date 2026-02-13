@@ -486,6 +486,7 @@ GameObject:
   - component: {fileID: 948568799}
   - component: {fileID: 948568798}
   - component: {fileID: 948568797}
+  - component: {fileID: 948568801}
   m_Layer: 0
   m_Name: Ground
   m_TagString: Platform
@@ -579,6 +580,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &948568801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948568796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854da5777ddbd49c284a2ad4e8184fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1291367580
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,6 +604,7 @@ GameObject:
   - component: {fileID: 1291367583}
   - component: {fileID: 1291367582}
   - component: {fileID: 1291367581}
+  - component: {fileID: 1291367585}
   m_Layer: 0
   m_Name: Platform_1
   m_TagString: Platform
@@ -684,6 +698,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -32}
+--- !u!114 &1291367585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1291367580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854da5777ddbd49c284a2ad4e8184fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1336047306
 GameObject:
   m_ObjectHideFlags: 0
@@ -696,6 +722,7 @@ GameObject:
   - component: {fileID: 1336047309}
   - component: {fileID: 1336047308}
   - component: {fileID: 1336047307}
+  - component: {fileID: 1336047311}
   m_Layer: 0
   m_Name: Platform_2
   m_TagString: Platform
@@ -789,6 +816,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 35}
+--- !u!114 &1336047311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1336047306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 854da5777ddbd49c284a2ad4e8184fae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1436046962
 GameObject:
   m_ObjectHideFlags: 0
@@ -907,7 +946,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e840515c0834749eab073f6003bdcf0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorCubePref: {fileID: 5810055105566966014, guid: 2c9197dd9d582406ebdc4d7023e3e002,
+  _colorCubePref: {fileID: 7404040319503027450, guid: 2c9197dd9d582406ebdc4d7023e3e002,
     type: 3}
   _poolCapacity: 20
   _poolMaxSize: 120

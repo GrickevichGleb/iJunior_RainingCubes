@@ -6,22 +6,24 @@ using UnityEngine;
 public class ColorCube : MonoBehaviour
 {
     private const string PlatformTag = "Platform";
-
-    public event Action<GameObject> RequestRelease;
     
     [SerializeField] private int _lifespanMin = 2;
     [SerializeField] private int _lifespanMax = 5;
 
-    private bool _hasHit = false;
-
-    public void Initialize()
-    {
-        if (gameObject.TryGetComponent(out Rigidbody rb))
-            rb.velocity = Vector3.zero;
-        
-        _hasHit = false;
-    }
+    private MeshRenderer _meshRenderer;
     
+    private bool _hasHit = false;
+    private Color _colorInit;
+    public event Action<GameObject> RequestRelease;
+    
+    private void Awake()
+    {
+        if (gameObject.TryGetComponent(out _meshRenderer))
+        {
+            _colorInit = _meshRenderer.material.color;
+        }
+    }
+
     private void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag(PlatformTag) == false)
@@ -36,10 +38,21 @@ public class ColorCube : MonoBehaviour
         SetRandomLifespan();
     }
 
+    public void Reset()
+    {
+        if (gameObject.TryGetComponent(out Rigidbody rb))
+            rb.velocity = Vector3.zero;
+        
+        if(_meshRenderer != null)
+            _meshRenderer.material.color = _colorInit;
+        
+        _hasHit = false;
+    }
+
     private void SetRandomColor()
     {
-        if (gameObject.TryGetComponent(out MeshRenderer meshRenderer))
-            meshRenderer.material.color = UtilsRandom.GetRandomColor();
+        if (_meshRenderer != null)
+            _meshRenderer.material.color = UtilsRandom.GetRandomColor();
     }
 
     private void SetRandomLifespan()
@@ -53,7 +66,6 @@ public class ColorCube : MonoBehaviour
     {
         yield return new WaitForSeconds(seconds);
         
-        Debug.Log($"Requested release for {gameObject}");
         RequestRelease?.Invoke(gameObject);
     }
 }

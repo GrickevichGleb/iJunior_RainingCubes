@@ -16,7 +16,8 @@ public class Spawner : MonoBehaviour
     private Collider _collider;
 
     private Vector3 _colliderCenter;
-    
+
+    private float _spawnInterval;
     private float _extentX;
     private float _extentZ;
 
@@ -34,11 +35,13 @@ public class Spawner : MonoBehaviour
             maxSize: _poolMaxSize);
         
         gameObject.TryGetComponent(out _collider);
+
+        _spawnInterval = 1 / _spawnRate;
     }
 
     private void Start()
     {
-        InvokeRepeating(nameof(SpawnCube), 0f, _spawnRate);
+        InvokeRepeating(nameof(SpawnCube), 0f, _spawnInterval);
     }
 
     private void SpawnCube()
@@ -52,7 +55,7 @@ public class Spawner : MonoBehaviour
 
         if (obj.TryGetComponent(out ColorCube cube))
         {
-            cube.Initialize();
+            cube.Reset();
             cube.RequestRelease += OnRequestRelease;
         }
             

@@ -5,26 +5,32 @@ using UnityEngine;
 
 public class ColorCube : MonoBehaviour
 {
+    private const string PlatformTag = "Platform";
+
+    public event Action<GameObject> RequestRelease;
+    
     [SerializeField] private int _lifespanMin = 2;
     [SerializeField] private int _lifespanMax = 5;
+
+    private bool _hasHit = false;
+
+    public void Initialize()
+    {
+        if (gameObject.TryGetComponent(out Rigidbody rb))
+            rb.velocity = Vector3.zero;
+        
+        _hasHit = false;
+    }
     
-    private const string PlatformTag = "Platform";
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnCollisionEnter(Collision other)
     {
-        if (!other.gameObject.CompareTag(PlatformTag))
+        if (other.gameObject.CompareTag(PlatformTag) == false)
             return;
+
+        if (_hasHit == true) 
+            return;
+        
+        _hasHit = true;
         
         SetRandomColor();
         SetRandomLifespan();
@@ -33,16 +39,21 @@ public class ColorCube : MonoBehaviour
     private void SetRandomColor()
     {
         if (gameObject.TryGetComponent(out MeshRenderer meshRenderer))
-        {
             meshRenderer.material.color = UtilsRandom.GetRandomColor();
-        }
     }
 
     private void SetRandomLifespan()
     {
         float lifespan = UtilsRandom.GetRandomNumber(_lifespanMin, _lifespanMax);
+
+        StartCoroutine(ReleaseAfter(lifespan));
+    }
+
+    private IEnumerator ReleaseAfter(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
         
-        Debug.Log($"Lifespan: {lifespan}");
-        Destroy(gameObject, lifespan);
+        Debug.Log($"Requested release for {gameObject}");
+        RequestRelease?.Invoke(gameObject);
     }
 }

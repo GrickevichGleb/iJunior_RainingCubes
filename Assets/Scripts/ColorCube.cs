@@ -5,18 +5,14 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(MeshRenderer))]
-public class ColorCube : MonoBehaviour
+public class ColorCube : Spawnable
 {
     [SerializeField] private int _lifespanMin = 2;
     [SerializeField] private int _lifespanMax = 5;
 
-    private MeshRenderer _meshRenderer;
-    private Rigidbody _rigidbody;
-    
     private bool _hasHit = false;
     private Color _colorInit;
-    public event Action<ColorCube> RequestRelease;
-    
+
     private void Awake()
     {
         _rigidbody = gameObject.GetComponent<Rigidbody>();
@@ -39,16 +35,13 @@ public class ColorCube : MonoBehaviour
         SetRandomLifespan();
     }
 
-    public void Reset()
+    public override void Reset()
     {
         _rigidbody.velocity = Vector3.zero;
         _meshRenderer.material.color = _colorInit;
         _hasHit = false;
-    }
-
-    private void SetRandomColor()
-    {
-        _meshRenderer.material.color = UtilsRandom.GetRandomColor();
+        
+        gameObject.SetActive(true);
     }
 
     private void SetRandomLifespan()
@@ -57,11 +50,16 @@ public class ColorCube : MonoBehaviour
 
         StartCoroutine(ReleaseAfter(lifespan));
     }
-
+    
+    private void SetRandomColor()
+    {
+        _meshRenderer.material.color = UtilsRandom.GetRandomColor();
+    }
+    
     private IEnumerator ReleaseAfter(float seconds)
     {
         yield return new WaitForSeconds(seconds);
         
-        RequestRelease?.Invoke(this);
+        Release();
     }
 }

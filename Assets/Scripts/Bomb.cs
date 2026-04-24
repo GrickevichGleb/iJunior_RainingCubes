@@ -4,27 +4,27 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Exploder))]
-public class Bomb : MonoBehaviour
+public class Bomb : Spawnable
 {
     [SerializeField] private int _delayMin = 2;
     [SerializeField] private int _delayMax = 5;
-    
-    private Rigidbody _rb;
-    private Collider _collider;
-    private MeshRenderer _meshRenderer;
 
+    private Collider _collider;
     private Exploder _exploder;
 
     private float _explosionDelay;
     private float _countdownStart;
     
+    private Color _colorInit;
+    
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
         _collider = GetComponent<Collider>();
         _meshRenderer = GetComponent<MeshRenderer>();
 
         _exploder = GetComponent<Exploder>();
+        _colorInit = _meshRenderer.material.color;
     }
 
     private void Start()
@@ -32,15 +32,37 @@ public class Bomb : MonoBehaviour
         _explosionDelay = UtilsRandom.GetRandomNumber(_delayMin, _delayMax);
         StartCoroutine(ExplodeAfterSeconds(_explosionDelay));
     }
+    
+    // private void OnCollisionEnter(Collision other)
+    // {
+    //     if (_hasHit == true) 
+    //         return;
+    //     
+    //     if (!other.gameObject.TryGetComponent(out Ground _))
+    //         return;
+    //     
+    //     _hasHit = true;
+    //
+    // }
+
+    public override void Reset()
+    {
+        _rigidbody.velocity = Vector3.zero;
+        _meshRenderer.material.color = _colorInit;
+        
+        gameObject.SetActive(true);
+    }
 
     private IEnumerator ExplodeAfterSeconds(float delay)
     {
         StartCoroutine(FadeAlpha(delay));
         yield return new WaitForSeconds(delay);
 
-        _rb.isKinematic = true;
+        _rigidbody.isKinematic = true;
         _collider.enabled = false;
         _exploder.Explode();
+        
+        Release();
     }
 
     private IEnumerator FadeAlpha(float duration)

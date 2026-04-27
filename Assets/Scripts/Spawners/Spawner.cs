@@ -12,6 +12,9 @@ public class Spawner : MonoBehaviour
     [SerializeField] protected int _poolMaxSize = 100;
 
     protected ObjectPool<Spawnable> _pool;
+
+    public event Action<Spawnable> Spawned;
+    public event Action<int, int> UpdateStats;
     
     private void Awake()
     {
@@ -29,11 +32,16 @@ public class Spawner : MonoBehaviour
     {
         spawnable.Reset();
         spawnable.RequestRelease += OnRequestRelease;
+        
+        Spawned?.Invoke(spawnable);
+        UpdateStats?.Invoke(_pool.CountAll, _pool.CountActive);
     }
     
     private void OnRequestRelease(Spawnable spawnable)
     {
         spawnable.RequestRelease -= OnRequestRelease;
         _pool.Release(spawnable);
+        
+        UpdateStats?.Invoke(_pool.CountAll, _pool.CountActive);
     }
 }

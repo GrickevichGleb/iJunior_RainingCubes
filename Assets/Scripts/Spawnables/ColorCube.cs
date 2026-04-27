@@ -13,6 +13,8 @@ public class ColorCube : Spawnable
     private bool _hasHit = false;
     private Color _colorInit;
 
+    public event Action<GameObject> Activated; 
+
     private void Awake()
     {
         _rigidbody = gameObject.GetComponent<Rigidbody>();
@@ -42,6 +44,7 @@ public class ColorCube : Spawnable
         _hasHit = false;
         
         gameObject.SetActive(true);
+        Activated?.Invoke(gameObject);
     }
 
     private void SetRandomLifespan()

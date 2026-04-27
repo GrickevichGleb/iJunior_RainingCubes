@@ -26,42 +26,28 @@ public class Bomb : Spawnable
         _exploder = GetComponent<Exploder>();
         _colorInit = _meshRenderer.material.color;
     }
-
-    private void Start()
-    {
-        _explosionDelay = UtilsRandom.GetRandomNumber(_delayMin, _delayMax);
-        StartCoroutine(ExplodeAfterSeconds(_explosionDelay));
-    }
-    
-    // private void OnCollisionEnter(Collision other)
-    // {
-    //     if (_hasHit == true) 
-    //         return;
-    //     
-    //     if (!other.gameObject.TryGetComponent(out Ground _))
-    //         return;
-    //     
-    //     _hasHit = true;
-    //
-    // }
-
+ 
     public override void Reset()
     {
         _rigidbody.velocity = Vector3.zero;
         _meshRenderer.material.color = _colorInit;
         
         gameObject.SetActive(true);
+        SetExplosionDelay();
+    }
+
+    private void SetExplosionDelay()
+    {
+        _explosionDelay = UtilsRandom.GetRandomNumber(_delayMin, _delayMax);
+        StartCoroutine(ExplodeAfterSeconds(_explosionDelay));
     }
 
     private IEnumerator ExplodeAfterSeconds(float delay)
     {
         StartCoroutine(FadeAlpha(delay));
         yield return new WaitForSeconds(delay);
-
-        _rigidbody.isKinematic = true;
-        _collider.enabled = false;
-        _exploder.Explode();
         
+        _exploder.Explode();
         Release();
     }
 

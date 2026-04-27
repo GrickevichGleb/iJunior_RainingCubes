@@ -27,7 +27,5 @@ public class Exploder : MonoBehaviour
                     ForceMode.Force);
             }
         }
-        
-        Destroy(gameObject);
     }
 }

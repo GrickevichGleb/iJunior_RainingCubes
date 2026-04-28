@@ -4,29 +4,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Spawner<T> : MonoBehaviour where T : Spawnable
+public class SpawnerOld : MonoBehaviour
 {
-    [SerializeField] protected SpawnerStats SpawnerStats;
-    [Space]
-    [SerializeField] protected T SpawnablePref;
+    [SerializeField] protected Spawnable spawnablePref;
     [Space] 
-    [SerializeField] protected int PoolCapacity = 10;
-    [SerializeField] protected int PoolMaxSize = 100;
+    [SerializeField] protected int _poolCapacity = 10;
+    [SerializeField] protected int _poolMaxSize = 100;
 
-    protected ObjectPool<T> Pool;
+    protected ObjectPool<Spawnable> _pool;
 
-    public event Action<T> Spawned;
-
+    public event Action<Spawnable> Spawned;
+    public event Action<int, int> UpdateStats;
+    
     private void Awake()
     {
-        Pool = new ObjectPool<T>(
-            createFunc: () => Instantiate(SpawnablePref),
+        _pool = new ObjectPool<Spawnable>(
+            createFunc: () => Instantiate(spawnablePref),
             actionOnGet: (spawnable) => ActionOnGet(spawnable),
             actionOnRelease: (spawnable) => spawnable.gameObject.SetActive(false),
             actionOnDestroy: (spawnable) => Destroy(spawnable.gameObject),
             collectionCheck: true,
-            defaultCapacity: PoolCapacity,
-            maxSize: PoolMaxSize);
+            defaultCapacity: _poolCapacity,
+            maxSize: _poolMaxSize);
     }
     
     protected virtual void ActionOnGet(Spawnable spawnable)
@@ -34,15 +33,15 @@ public class Spawner<T> : MonoBehaviour where T : Spawnable
         spawnable.Reset();
         spawnable.RequestRelease += OnRequestRelease;
         
-        Spawned?.Invoke((T)spawnable);
-        SpawnerStats.UpdateStats(true,Pool.CountAll, Pool.CountActive);
+        Spawned?.Invoke(spawnable);
+        UpdateStats?.Invoke(_pool.CountAll, _pool.CountActive);
     }
     
     private void OnRequestRelease(Spawnable spawnable)
     {
         spawnable.RequestRelease -= OnRequestRelease;
-        Pool.Release((T)spawnable);
+        _pool.Release(spawnable);
         
-        SpawnerStats.UpdateStats(false,Pool.CountAll, Pool.CountActive);
+        UpdateStats?.Invoke(_pool.CountAll, _pool.CountActive);
     }
 }

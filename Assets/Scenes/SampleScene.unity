@@ -560,7 +560,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec4d8e02cf9de45308c7006b38bc22a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawner: {fileID: 1436046967}
   _spawnedText: {fileID: 613399994}
   _instantiatedText: {fileID: 1021436166}
   _activeText: {fileID: 1834674324}
@@ -1883,7 +1882,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec4d8e02cf9de45308c7006b38bc22a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spawner: {fileID: 1348376608}
   _spawnedText: {fileID: 1688528813}
   _instantiatedText: {fileID: 1681207109}
   _activeText: {fileID: 1299449178}
@@ -2788,7 +2786,7 @@ GameObject:
   - component: {fileID: 1348376606}
   - component: {fileID: 1348376605}
   - component: {fileID: 1348376604}
-  - component: {fileID: 1348376608}
+  - component: {fileID: 1348376609}
   m_Layer: 0
   m_Name: BombSpawner
   m_TagString: Untagged
@@ -2882,7 +2880,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1348376608
+--- !u!114 &1348376609
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2891,14 +2889,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1348376603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6c05a72d9ddc4710a0a549e395ed698, type: 3}
+  m_Script: {fileID: 11500000, guid: 171a9956364994d378278fc92cf230db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnablePref: {fileID: 3424570043480000942, guid: 26f31578a5fd84420aa72a143d5c202e,
+  SpawnerStats: {fileID: 780196696}
+  SpawnablePref: {fileID: 3424570043480000942, guid: 26f31578a5fd84420aa72a143d5c202e,
     type: 3}
-  _poolCapacity: 20
-  _poolMaxSize: 120
-  _cubeSpawner: {fileID: 1436046967}
+  PoolCapacity: 10
+  PoolMaxSize: 100
+  _cubeSpawner: {fileID: 1436046968}
 --- !u!1 &1393591670
 GameObject:
   m_ObjectHideFlags: 0
@@ -3015,7 +3014,7 @@ GameObject:
   - component: {fileID: 1436046965}
   - component: {fileID: 1436046964}
   - component: {fileID: 1436046963}
-  - component: {fileID: 1436046967}
+  - component: {fileID: 1436046968}
   m_Layer: 0
   m_Name: CubeSpawner
   m_TagString: Untagged
@@ -3109,7 +3108,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1436046967
+--- !u!114 &1436046968
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3118,14 +3117,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1436046962}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e840515c0834749eab073f6003bdcf0d, type: 3}
+  m_Script: {fileID: 11500000, guid: a188e8359afdd4b9caa3f3364ffe7bc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnablePref: {fileID: 0}
-  _poolCapacity: 20
-  _poolMaxSize: 120
-  _colorCubePref: {fileID: 7404040319503027450, guid: 2c9197dd9d582406ebdc4d7023e3e002,
+  SpawnerStats: {fileID: 170626040}
+  SpawnablePref: {fileID: 7404040319503027450, guid: 2c9197dd9d582406ebdc4d7023e3e002,
     type: 3}
+  PoolCapacity: 20
+  PoolMaxSize: 150
   _spawnRate: 2
 --- !u!1 &1681207107
 GameObject:

@@ -5,8 +5,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class CubeSpawner : Spawner<ColorCube>
+public class CubeSpawnerOld : SpawnerOld
 {
+    [SerializeField] private Spawnable _colorCubePref;
     [SerializeField] private float _spawnRate = 1f;
     
     private Collider _collider;
@@ -19,11 +20,24 @@ public class CubeSpawner : Spawner<ColorCube>
 
     private bool _isSpawning = true;
 
+    private void Awake()
+    {
+        _pool = new ObjectPool<Spawnable>(
+            createFunc: () => Instantiate(_colorCubePref),
+            actionOnGet: (spawnable) => ActionOnGet(spawnable),
+            actionOnRelease: (spawnable) => spawnable.gameObject.SetActive(false),
+            actionOnDestroy: (spawnable) => Destroy(spawnable.gameObject),
+            collectionCheck: true,
+            defaultCapacity: _poolCapacity,
+            maxSize: _poolMaxSize);
+        
+        gameObject.TryGetComponent(out _collider);
+
+        _spawnInterval = 1 / _spawnRate;
+    }
+
     private void Start()
     {
-        gameObject.TryGetComponent(out _collider);
-        _spawnInterval = 1 / _spawnRate;
-        
         StartCoroutine(SpawnCubes(_spawnInterval));
     }
 
@@ -64,7 +78,7 @@ public class CubeSpawner : Spawner<ColorCube>
         {
             yield return delaySeconds;
             
-            Pool.Get();
+            _pool.Get();
         }
     }
 }

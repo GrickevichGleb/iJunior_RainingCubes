@@ -6,8 +6,6 @@ using UnityEngine;
 
 public class SpawnerStats : MonoBehaviour
 {
-    [SerializeField] private Spawner _spawner;
-    [Space] 
     [SerializeField] private TMP_Text _spawnedText;
     [SerializeField] private TMP_Text _instantiatedText;
     [SerializeField] private TMP_Text _activeText;
@@ -15,25 +13,17 @@ public class SpawnerStats : MonoBehaviour
     private int _spawned = 0;
     private int _instantiated = 0;
     private int _active = 0;
-
-    private void OnEnable()
-    {
-        _spawner.UpdateStats += OnUpdateStats;
-    }
-
+    
     private void Start()
     {
         Display();
     }
 
-    private void OnDisable()
+    public void UpdateStats(bool spawnedNew, int instantiated, int active)
     {
-        _spawner.UpdateStats -= OnUpdateStats;
-    }
+        if (spawnedNew)
+            _spawned++;
 
-    private void OnUpdateStats(int instantiated, int active)
-    {
-        _spawned++;
         _instantiated = instantiated;
         _active = active;
         
@@ -46,6 +36,4 @@ public class SpawnerStats : MonoBehaviour
         _instantiatedText.text = _instantiated.ToString();
         _activeText.text = _active.ToString();
     }
-    
-    
 }

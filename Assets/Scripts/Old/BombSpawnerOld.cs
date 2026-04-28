@@ -3,20 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombSpawner : Spawner<Bomb>
+public class BombSpawnerOld : SpawnerOld
 {
-    [SerializeField] private CubeSpawner _cubeSpawner;
+    [SerializeField] private SpawnerOld cubeSpawnerOld;
     
     private Vector3 _bombSpawnPos;
 
     private void OnEnable()
     {
-        _cubeSpawner.Spawned += OnCubeSpawned;
+        cubeSpawnerOld.Spawned += OnCubeSpawned;
     }
 
     private void OnDisable()
     {
-        _cubeSpawner.Spawned -= OnCubeSpawned;
+        cubeSpawnerOld.Spawned -= OnCubeSpawned;
     }
 
     protected override void ActionOnGet(Spawnable spawnable)
@@ -30,7 +30,7 @@ public class BombSpawner : Spawner<Bomb>
     {
         _bombSpawnPos = spawnPos;
         
-        Pool.Get();
+        _pool.Get();
     }
 
     private void OnCubeSpawned(Spawnable colorCube)

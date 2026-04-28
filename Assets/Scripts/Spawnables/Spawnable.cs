@@ -11,7 +11,7 @@ public class Spawnable : MonoBehaviour
     public event Action<Spawnable> RequestRelease;
 
     public virtual void Reset() { }
-
+    
     protected void Release()
     {
         RequestRelease?.Invoke(this);

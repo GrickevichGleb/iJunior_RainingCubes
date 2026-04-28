@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombSpawner : Spawner<Bomb>
+public class BombSpawner : Spawner<Bomb> 
 {
     [SerializeField] private CubeSpawner _cubeSpawner;
     

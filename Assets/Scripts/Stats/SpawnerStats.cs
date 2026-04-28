@@ -3,23 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Scripting;
 
 public class SpawnerStats : MonoBehaviour
 {
+    [SerializeField] private GameObject _spawnerObj;
+    [Space]
     [SerializeField] private TMP_Text _spawnedText;
     [SerializeField] private TMP_Text _instantiatedText;
     [SerializeField] private TMP_Text _activeText;
-
+    
     private int _spawned = 0;
     private int _instantiated = 0;
     private int _active = 0;
     
+    private IPoolStats _spawner;
+
+    private void Awake()
+    {
+        _spawner = _spawnerObj.GetComponent<IPoolStats>();
+    }
+
+    private void OnEnable()
+    {
+        _spawner.UpdateStats += OnUpdateStats;
+    }
+
     private void Start()
     {
         Display();
     }
 
-    public void UpdateStats(bool spawnedNew, int instantiated, int active)
+    private void OnDisable()
+    {
+        _spawner.UpdateStats -= OnUpdateStats;
+    }
+
+    private void OnUpdateStats(bool spawnedNew, int instantiated, int active)
     {
         if (spawnedNew)
             _spawned++;

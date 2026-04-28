@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class Spawner<T> : MonoBehaviour where T : Spawnable
+public class Spawner<T> : MonoBehaviour, IPoolStats where T : Spawnable
 {
-    [SerializeField] protected SpawnerStats SpawnerStats;
-    [Space]
     [SerializeField] protected T SpawnablePref;
     [Space] 
     [SerializeField] protected int PoolCapacity = 10;
@@ -16,6 +14,7 @@ public class Spawner<T> : MonoBehaviour where T : Spawnable
     protected ObjectPool<T> Pool;
 
     public event Action<T> Spawned;
+    public event Action<bool, int, int> UpdateStats; 
 
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class Spawner<T> : MonoBehaviour where T : Spawnable
         spawnable.RequestRelease += OnRequestRelease;
         
         Spawned?.Invoke((T)spawnable);
-        SpawnerStats.UpdateStats(true,Pool.CountAll, Pool.CountActive);
+        UpdateStats?.Invoke(true, Pool.CountAll, Pool.CountActive);
     }
     
     private void OnRequestRelease(Spawnable spawnable)
@@ -43,6 +42,6 @@ public class Spawner<T> : MonoBehaviour where T : Spawnable
         spawnable.RequestRelease -= OnRequestRelease;
         Pool.Release((T)spawnable);
         
-        SpawnerStats.UpdateStats(false,Pool.CountAll, Pool.CountActive);
+        UpdateStats?.Invoke(false, Pool.CountAll, Pool.CountActive);
     }
 }
